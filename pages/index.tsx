@@ -4,7 +4,7 @@ import CallsModule from '../components/CallsModule';
 import { ethers } from 'ethers';
 import Sunrises from '../components/Sunrises';
 import FertQueue from '../components/FertQueue';
-import ContractStorage from '../components/ContractStorage';
+import BeanstalkStorage from '../components/BeanstalkStorage';
 import { Storage } from '../generated/Beanstalk'; 
 import Page from '../components/layout/Page';
 import { shortenAddress } from '../utils/stringUtils';
@@ -51,7 +51,7 @@ const Home: NextPage = () => {
           ]}
           raw={raw}
         />
-        <ContractStorage />
+        <BeanstalkStorage />
       </div>
       <div className={COL_ITEM}>
         <CallsModule
