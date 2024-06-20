@@ -8,12 +8,13 @@ const SUBGRAPHS = [
   `https://graph.node.bean.money/subgraphs/name/beanstalk`,
   `https://graph.node.bean.money/subgraphs/name/beanstalk-dev`,
   `https://graph.node.bean.money/subgraphs/name/beanstalk-testing`,
-  `https://graph.node.bean.money/subgraphs/name/beanstalk-2-1-0`,
   `https://graph.node.bean.money/subgraphs/name/bean`,
   `https://graph.node.bean.money/subgraphs/name/bean-dev`,
   `https://graph.node.bean.money/subgraphs/name/bean-testing`,
   `https://graph.node.bean.money/subgraphs/name/basin`,
   `https://graph.node.bean.money/subgraphs/name/basin-dev`,
+  `https://graph.node.bean.money/subgraphs/name/basin-testing`,
+  `https://graph.node.bean.money/subgraphs/name/beanft`,
 ]
 
 const checkSubgraphStatus = async (url: string, isBeanstalk: boolean) => {
@@ -85,17 +86,22 @@ const Infra: NextPage = () => {
         <table className="max-w-8xl border-separate px-4 py-2 border-spacing-2">
           <thead>
             <tr className="space-x-4">
-              <th>Name</th>
-              <th>Block Number</th>
-              <th>Indexing errors?</th>
-              <th>Last Season</th>
-              <th>Version</th>
-              <th>ID</th>
+              <th style={{padding: '0 80px 0 20px'}}>Name</th>
+              <th style={{padding: '0 40px 0 20px'}}>Block</th>
+              <th style={{padding: '0 20px 0 0'}}>Errors?</th>
+              <th style={{padding: '0 20px 0 0'}}>Season</th>
+              <th style={{padding: '0 20px 0 0'}}>Version</th>
+              <th>Deployment</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {SUBGRAPHS.map((url) => <Subgraph url={url} key={url} latestBlockNumberNetwork={0} />)}
+            {SUBGRAPHS.map((url: string, idx: number) => {
+                return <React.Fragment key={url}>
+                  {idx % 3 == 0 && <hr style={{ width: '620%', margin: '20px auto', display: 'block' }} />}
+                  <Subgraph url={url} latestBlockNumberNetwork={0} />
+                </React.Fragment>
+            })}
           </tbody>
         </table>
       </div>

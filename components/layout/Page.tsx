@@ -1,4 +1,5 @@
 import React from "react";
+import Link from 'next/link';
 
 const Page : React.FC<{
   children: React.ReactNode;
@@ -10,7 +11,10 @@ const Page : React.FC<{
   return (
     <div className="bg-gray-900 h-screen text-white flex flex-col">
       <div className="px-2 py-2 border-b border-gray-800 w-full flex flex-row items-center justify-between">
-        <div>Beanstalk</div>
+      <div className="flex flex-row items-center space-x-4">
+        <div><Link href="/">Protocol</Link></div>
+        <div><Link href="/infra">Subgraphs</Link></div>
+      </div>
         <div className="flex flex-row items-center space-x-1 cursor">
           {rightHeader}
         </div>
