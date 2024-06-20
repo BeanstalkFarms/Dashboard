@@ -10,6 +10,7 @@
     "generate": "typechain --target ethers-v5 --out-dir generated/ ./abi/**/*.json"
   },
   "dependencies": {
+    "@beanstalk/contract-storage": "^1.0.1",
     "@types/lodash": "^4.14.182",
     "ethers": "^5.6.9",
     "ethers-multicall": "^0.2.3",

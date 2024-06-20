@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ContractStorage } from '@beanstalk/contract-storage';
+import ContractStorage from '@beanstalk/contract-storage';
 const storageLayout = require('../abi/BeanstalkStorageBIP47.json');
 import { provider } from '../lib/provider';
 
@@ -83,7 +83,15 @@ export default function BeanstalkStorage() {
             >
               slot: 0x{storageResult.slot.toString(16)}
             </p>}
-          <p>data: {storageResult.content.toString()}</p>
+          <p
+            style={{
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}
+          >
+            data: {storageResult.content.toString()}
+          </p>
         </div>
       }
     </div>
