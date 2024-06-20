@@ -4,6 +4,7 @@ import CallsModule from '../components/CallsModule';
 import { ethers } from 'ethers';
 import Sunrises from '../components/Sunrises';
 import FertQueue from '../components/FertQueue';
+import ContractStorage from '../components/ContractStorage';
 import { Storage } from '../generated/Beanstalk'; 
 import Page from '../components/layout/Page';
 import { shortenAddress } from '../utils/stringUtils';
@@ -50,6 +51,7 @@ const Home: NextPage = () => {
           ]}
           raw={raw}
         />
+        <ContractStorage />
       </div>
       <div className={COL_ITEM}>
         <CallsModule
@@ -70,14 +72,14 @@ const Home: NextPage = () => {
         <CallsModule
           title="Convert"
           slots={[
-            ["1 BEAN -> BEAN:ETH",          "getAmountOut",   localeNumber(18, 6), [BEAN, BEANETH, ethers.utils.parseUnits('1', 6)]],
-            ["1 BEAN:ETH -> BEAN",          "getAmountOut",   localeNumber(6, 6),  [BEANETH, BEAN, ethers.utils.parseUnits('1', 18)]],
-            ["1 urBEAN -> urBEAN:ETH",      "getAmountOut",   localeNumber(6, 6),  [UNRIPE_BEAN, UNRIPE_LP, ethers.utils.parseUnits('1', 6)]],
-            ["1 urBEAN:ETH -> urBEAN",      "getAmountOut",   localeNumber(6, 6),  [UNRIPE_LP, UNRIPE_BEAN, ethers.utils.parseUnits('1', 6)]],
-            ["Max: BEAN -> BEAN:ETH",       "getMaxAmountIn", localeNumber(6, 0),  [BEAN, BEANETH]],
-            ["Max: BEAN:ETH -> BEAN",       "getMaxAmountIn", localeNumber(18, 0), [BEANETH, BEAN]],
-            ["Max: urBEAN -> urBEAN:ETH",   "getMaxAmountIn", localeNumber(6, 0),  [UNRIPE_BEAN, UNRIPE_LP]],
-            ["Max: urBEAN:3CRV -> urBEAN",  "getMaxAmountIn", localeNumber(6, 0),  [UNRIPE_LP, UNRIPE_BEAN]],
+            ["1 BEAN -> BEAN:ETH",       "getAmountOut",   localeNumber(18, 6), [BEAN, BEANETH, ethers.utils.parseUnits('1', 6)]],
+            ["1 BEAN:ETH -> BEAN",       "getAmountOut",   localeNumber(6, 6),  [BEANETH, BEAN, ethers.utils.parseUnits('1', 18)]],
+            ["1 urBEAN -> urBEAN:ETH",   "getAmountOut",   localeNumber(6, 6),  [UNRIPE_BEAN, UNRIPE_LP, ethers.utils.parseUnits('1', 6)]],
+            ["1 urBEAN:ETH -> urBEAN",   "getAmountOut",   localeNumber(6, 6),  [UNRIPE_LP, UNRIPE_BEAN, ethers.utils.parseUnits('1', 6)]],
+            ["Max: BEAN -> BEAN:ETH",    "getMaxAmountIn", localeNumber(6, 0),  [BEAN, BEANETH]],
+            ["Max: BEAN:ETH -> BEAN",    "getMaxAmountIn", localeNumber(18, 0), [BEANETH, BEAN]],
+            ["Max: urBEAN -> urBEANETH", "getMaxAmountIn", localeNumber(6, 0),  [UNRIPE_BEAN, UNRIPE_LP]],
+            ["Max: urBEANETH -> urBEAN", "getMaxAmountIn", localeNumber(6, 0),  [UNRIPE_LP, UNRIPE_BEAN]],
           ]}
           raw={raw}
           multicall={false}
