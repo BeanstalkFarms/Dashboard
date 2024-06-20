@@ -18,8 +18,8 @@ const UNRIPE_LP   = "0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D";
 
 export const localeNumber = (decimals: number, maxFractionDigits?: number) => 
   (v: ethers.BigNumber) => parseFloat(ethers.utils.formatUnits(v, decimals)).toLocaleString('en-us', { maximumFractionDigits: maxFractionDigits ?? 3 });
-export const percentNumber = (decimals: number) =>
-  (v: ethers.BigNumber) => `${(parseFloat(ethers.utils.formatUnits(v, decimals))*100).toFixed(4)}%`
+export const percentNumber = (decimals: number, maxFractionDigits?: number) =>
+  (v: ethers.BigNumber) => `${(parseFloat(ethers.utils.formatUnits(v, decimals))*100).toFixed(maxFractionDigits ?? 4)}%`
 
 const COL_ITEM = "space-y-4 min-w-[300px]";
 
