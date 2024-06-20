@@ -6,11 +6,13 @@ import Sunrises from '../components/Sunrises';
 import FertQueue from '../components/FertQueue';
 import { Storage } from '../generated/Beanstalk'; 
 import Page from '../components/layout/Page';
+import { shortenAddress } from '../utils/stringUtils';
 
-const BEAN            = "0xBEA0000029AD1c77D3d5D23Ba2D8893dB9d1Efab";
-const BEANCRV3        = "0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49";
-const UNRIPE_BEAN     = "0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449";
-const UNRIPE_BEANCRV3 = "0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D";
+const BEAN        = "0xBEA0000029AD1c77D3d5D23Ba2D8893dB9d1Efab";
+const BEANCRV3    = "0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49";
+const BEANETH     = "0xBEA0e11282e2bB5893bEcE110cF199501e872bAd";
+const UNRIPE_BEAN = "0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449";
+const UNRIPE_LP   = "0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D";
 
 
 export const localeNumber = (decimals: number, maxFractionDigits?: number) => 
@@ -36,7 +38,7 @@ const Home: NextPage = () => {
           slots={[
             ['Paused', 'paused'],
             ['Season', 'season'],
-            ['Season Time', 'seasonTime'],
+            ['Season Time', 'seasonTime']
           ]}
           raw={raw}
         />
@@ -44,64 +46,39 @@ const Home: NextPage = () => {
         <CallsModule
           title="Owner"
           slots={[
-            ['Owner', 'owner', (owner) => `${owner.substring(0,15)}...`],
+            ['Owner', 'owner', shortenAddress],
           ]}
           raw={raw}
         />
       </div>
       <div className={COL_ITEM}>
         <CallsModule
-          title="Silo"
-          slots={[
-            ["Withdraw Freeze", "withdrawFreeze"],
-          ]}
-          raw={raw}
-        />
-        <CallsModule
           title="BDV"
           slots={[
             ["Beans", "bdv", localeNumber(6, 6), [BEAN, ethers.utils.parseUnits('1', 6)]],
-            ["Bean:3CRV", "bdv", localeNumber(6, 6), [BEANCRV3, ethers.utils.parseUnits('1', 18)]],
+            ["Bean:ETH", "bdv", localeNumber(6, 6), [BEANETH, ethers.utils.parseUnits('1', 18)]],
             ["Unripe Beans", "bdv", localeNumber(6, 6), [UNRIPE_BEAN, ethers.utils.parseUnits('1', 6)]],
-            ["Unripe Bean:3CRV", "bdv", localeNumber(6, 6), [UNRIPE_BEANCRV3, ethers.utils.parseUnits('1', 6)]],
+            ["Unripe Bean:ETH", "bdv", localeNumber(6, 6), [UNRIPE_LP, ethers.utils.parseUnits('1', 6)]],
           ]}
           raw={raw}
         />
         <CallsModule
           title="Convert"
           slots={[
-            ["1 BEAN -> BEAN:3CRV",     "getAmountOut", localeNumber(18, 6), [BEAN, BEANCRV3, ethers.utils.parseUnits('1', 6)]],
-            ["1 urBEAN -> urBEAN:3CRV", "getAmountOut", localeNumber(6, 6),  [UNRIPE_BEAN, UNRIPE_BEANCRV3, ethers.utils.parseUnits('1', 6)]],
-            ["1 BEAN:3CRV -> BEAN",     "getAmountOut", localeNumber(6, 6),  [BEANCRV3, BEAN, ethers.utils.parseUnits('1', 18)]],
-            ["1 urBEAN:3CRV -> urBEAN", "getAmountOut", localeNumber(6, 6),  [UNRIPE_BEANCRV3, UNRIPE_BEAN, ethers.utils.parseUnits('1', 6)]],
-            ["Max: BEAN -> BEAN:3CRV",  "getMaxAmountIn",  localeNumber(6, 6),  [BEAN, BEANCRV3]],
-            ["Max: urBEAN -> urBEAN:3CRV",  "getMaxAmountIn",  localeNumber(6, 6),  [UNRIPE_BEAN, UNRIPE_BEANCRV3]],
-            ["Max: BEAN:3CRV -> BEAN",     "getMaxAmountIn", localeNumber(18, 6),  [BEANCRV3, BEAN]],
-            ["Max: urBEAN:3CRV -> urBEAN", "getMaxAmountIn", localeNumber(6, 6),  [UNRIPE_BEANCRV3, UNRIPE_BEAN]],
+            ["1 BEAN -> BEAN:ETH",          "getAmountOut",   localeNumber(18, 6), [BEAN, BEANETH, ethers.utils.parseUnits('1', 6)]],
+            ["1 BEAN:ETH -> BEAN",          "getAmountOut",   localeNumber(6, 6),  [BEANETH, BEAN, ethers.utils.parseUnits('1', 18)]],
+            ["1 urBEAN -> urBEAN:ETH",      "getAmountOut",   localeNumber(6, 6),  [UNRIPE_BEAN, UNRIPE_LP, ethers.utils.parseUnits('1', 6)]],
+            ["1 urBEAN:ETH -> urBEAN",      "getAmountOut",   localeNumber(6, 6),  [UNRIPE_LP, UNRIPE_BEAN, ethers.utils.parseUnits('1', 6)]],
+            ["Max: BEAN -> BEAN:ETH",       "getMaxAmountIn", localeNumber(6, 6),  [BEAN, BEANETH]],
+            ["Max: BEAN:ETH -> BEAN",       "getMaxAmountIn", localeNumber(18, 6), [BEANETH, BEAN]],
+            ["Max: urBEAN -> urBEAN:ETH",   "getMaxAmountIn", localeNumber(6, 6),  [UNRIPE_BEAN, UNRIPE_LP]],
+            ["Max: urBEAN:3CRV -> urBEAN",  "getMaxAmountIn", localeNumber(6, 6),  [UNRIPE_LP, UNRIPE_BEAN]],
           ]}
           raw={raw}
           multicall={false}
         />
       </div>
       <div className={COL_ITEM}>
-        <CallsModule
-          title="Field"
-          slots={[
-            ["Pods", "totalPods", localeNumber(6)],
-            ["Soil", "totalSoil", localeNumber(6)],
-            ["Temperature", "yield", percentNumber(2)],
-            ["Harvested Pods", "totalHarvested", localeNumber(6)],
-            ["Harvestable Index", "harvestableIndex", localeNumber(6)],
-            ["Weather", "weather", (value: Storage.WeatherStructOutput) => ({
-              startSoil: value.startSoil.toString(),
-              lastDSoil: value.lastDSoil.toString(),
-              lastSowTime: value.lastSowTime.toString(),
-              nextSowTime: value.nextSowTime.toString(),
-              yield: value.yield.toString(),
-            })]
-          ]}
-          raw={raw}
-        />
         <CallsModule
           title="Field"
           slots={[
@@ -138,20 +115,20 @@ const Home: NextPage = () => {
           title="Unripe"
           slots={[
             ['Is Unripe? (BEAN)', 'isUnripe', undefined, [UNRIPE_BEAN]],
-            ['Is Unripe? (BEAN:3CRV)', 'isUnripe', undefined, [UNRIPE_BEANCRV3]],
+            ['Is Unripe? (BEAN:ETH)', 'isUnripe', undefined, [UNRIPE_LP]],
             ['Total Underlying (BEAN)', 'getTotalUnderlying', localeNumber(6), [UNRIPE_BEAN]],
-            ['Total Underlying (BEAN:3CRV)', 'getTotalUnderlying', localeNumber(18), [UNRIPE_BEANCRV3]],
+            ['Total Underlying (BEAN:ETH)', 'getTotalUnderlying', localeNumber(18), [UNRIPE_LP]],
             ['% of Sprouts Fertilized', 'getRecapPaidPercent', percentNumber(6)],
             ["Underlying Per Unripe----------", 'isUnripe', undefined, [UNRIPE_BEAN]],
             ['Penalized Underlying per Unripe (BEAN)', 'getPenalty', localeNumber(6), [UNRIPE_BEAN]],
-            ['Penalized Underlying per Unripe (BEAN:3CRV)', 'getPenalty', localeNumber(18), [UNRIPE_BEANCRV3]],
+            ['Penalized Underlying per Unripe (BEAN:ETH)', 'getPenalty', localeNumber(18), [UNRIPE_LP]],
             ['Underlying per Unripe (BEAN)', 'getUnderlyingPerUnripeToken', localeNumber(6), [UNRIPE_BEAN]],
-            ['Underlying per Unripe (BEAN:3CRV)', 'getUnderlyingPerUnripeToken', localeNumber(18), [UNRIPE_BEANCRV3]],
+            ['Underlying per Unripe (BEAN:ETH)', 'getUnderlyingPerUnripeToken', localeNumber(18), [UNRIPE_LP]],
             ["Chop Rate-------------", 'isUnripe', undefined, [UNRIPE_BEAN]],
             ['Chop Rate (BEAN)', 'getPercentPenalty', percentNumber(6), [UNRIPE_BEAN]],
-            ['Chop Rate (BEAN:3CRV)', 'getPercentPenalty', percentNumber(6), [UNRIPE_BEANCRV3]],
+            ['Chop Rate (BEAN:ETH)', 'getPercentPenalty', percentNumber(6), [UNRIPE_LP]],
             ['% Recapitalized (BEAN)', 'getRecapFundedPercent', percentNumber(6), [UNRIPE_BEAN]],
-            ['% Recapitalized (BEAN:3CRV)', 'getRecapFundedPercent', percentNumber(6), [UNRIPE_BEANCRV3]],
+            ['% Recapitalized (BEAN:ETH)', 'getRecapFundedPercent', percentNumber(6), [UNRIPE_LP]],
           ]}
           raw={raw}
         />

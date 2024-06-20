@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Contract } from 'ethers-multicall';
-import { ethers } from 'ethers';
+import { shortenAddress } from '../utils/stringUtils'; 
 
 import contracts from '../lib/contracts';
 import { Beanstalk } from '../generated';
@@ -33,7 +33,7 @@ const Slot = ({
   ///
   let content;
   let displayMode : 'column' | 'row' = 'row';
-  if (data && data[index]) {
+  if (data && data[index] != undefined) {
     const dType = typeof data[index];
     if (raw) {
       let displayMode = dType === 'object' ? 'column' : 'row';
@@ -43,7 +43,7 @@ const Slot = ({
         </div>
       );
     } else {
-      if (parseResult) {
+      if (parseResult != undefined) {
         let parsedResult = parseResult(data[index]);
         let dTypeResult  = typeof parsedResult;
         if (dTypeResult === 'string') {
@@ -92,7 +92,7 @@ const Slot = ({
       </div>
       {exp && (
         <div className="px-2 text-gray-400 text-sm break-words pb-2">
-          {method}({args?.join(', ')})
+          {method}({args?.map(shortenAddress)?.join(', ')})
           {desc && <><br/>{desc}</>}
         </div>
       )}
@@ -131,7 +131,7 @@ const CallsModule : React.FC<{
             slots
               .map(slot => {
                 const args = (slot[3] || []);
-                console.log(contracts.beanstalk[slot[1]](...args))
+                // console.log(slot[0], slot[1], contracts.beanstalk[slot[1]](...args))
                 return (contracts.beanstalk[slot[1]](...args) as Promise<any>).catch((err) => {
                   console.error(err);
                   return null;

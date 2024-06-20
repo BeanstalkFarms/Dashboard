@@ -6,13 +6,14 @@ import contracts from "../lib/contracts"
 import { provider } from "../lib/provider";
 import { ethers } from "ethers";
 import { TypedEvent } from "../generated/common";
+import { shortenAddress } from "../utils/stringUtils";
 
 const SECONDS_PER_HOUR  = 60*60;
 const AVG_SECONDS_PER_BLOCK = 10;
 const AVG_BLOCKS_PER_HOUR = SECONDS_PER_HOUR/AVG_SECONDS_PER_BLOCK;
 const NUM_SEASONS = 5;
 
-type SeasonEventNames = 'MetapoolOracle' | 'WeatherChange' | 'SeasonOfPlenty' | 'Reward' | 'Soil';
+type SeasonEventNames = 'WellOracle' | 'SeasonOfPlenty' | 'Reward' | 'Soil' | 'TemperatureChange';// | 'Incentivization';
 type Seasons = { [season: string] : { [event: string] : any } };
 const none = <em>None</em>
 
@@ -23,23 +24,23 @@ export function Sunrise({ season, events } : { season: string, events: Seasons[s
       Sunrise #{season.toString()}
       {exp && (
         <div className="ml-2 mt-1 space-y-2 text-sm">
-          {/* Event: MetapoolOracle */}
+          {/* Event: WellOracle */}
           <div>
-            <h2 className="font-bold">MetapoolOracle</h2>
-            {events['MetapoolOracle'] ? (
+            <h2 className="font-bold">WellOracle</h2>
+            {events['WellOracle'] ? (
               <div className="ml-2">
-                <div>deltaB: {ethers.utils.formatUnits(events['MetapoolOracle'].deltaB || '0', 6)}</div>
-                <div>balances: {events['MetapoolOracle']?.balances.map((b: any, i: number) => <div key={i} className="ml-2">{i} = {b.toString()}</div>) || '0'}</div>
+                <div>well: {shortenAddress(events['WellOracle'].well.toString())}</div>
+                <div>deltaB: {ethers.utils.formatUnits(events['WellOracle'].deltaB || '0', 6)}</div>
               </div>
             ) : none}
           </div>
           {/* Event: WeatherChange */}
           <div>
-            <h2 className="font-bold">WeatherChange</h2>
-            {events['WeatherChange'] ? (
+            <h2 className="font-bold">TemperatureChange</h2>
+            {events['TemperatureChange'] ? (
               <div className="ml-2">
-                <div>caseId: {events['WeatherChange'].caseId.toString()}</div>
-                <div>change: {events['WeatherChange'].change.toString()}</div>
+                <div>caseId: {events['TemperatureChange'].caseId.toString()}</div>
+                <div>absChange: {events['TemperatureChange'].absChange.toString()}</div>
               </div>
             ) : none}
           </div>
@@ -68,6 +69,15 @@ export function Sunrise({ season, events } : { season: string, events: Seasons[s
             {events['Soil'] ? (
               <div className="ml-2">
                 <div>soil: {ethers.utils.formatUnits(events['Soil']?.soil || '0', 6)}</div>
+              </div>
+            ) : none}
+          </div>
+          {/* Event: Incentivization */}
+          <div>
+            <h2 className="font-bold">Incentivization</h2>
+            {events['Incentivization'] ? (
+              <div className="ml-2">
+                <div>incentive: {ethers.utils.formatUnits(events['Incentivization']?.amount || '0', 6)}</div>
               </div>
             ) : none}
           </div>
@@ -100,11 +110,12 @@ export default function Sunrises() {
       };
 
       const queries = await Promise.all([
-        ...filters('MetapoolOracle'),
-        ...filters('WeatherChange'),
+        ...filters('WellOracle'),
+        ...filters('TemperatureChange'),
         ...filters('SeasonOfPlenty'),
         ...filters('Reward'),
         ...filters('Soil'),
+        // ...filters('Incentivization'), // TODO: put this here when the abi has this event
       ]);
       const seasons : Seasons = {};
       const flattened = flatten<TypedEvent<any, { season: number | ethers.BigNumber }>>(queries);
