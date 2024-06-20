@@ -16,7 +16,7 @@ const UNRIPE_LP   = "0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D";
 
 
 export const localeNumber = (decimals: number, maxFractionDigits?: number) => 
-  (v: ethers.BigNumber) => parseFloat(ethers.utils.formatUnits(v, decimals)).toLocaleString('en-us', { maximumFractionDigits: maxFractionDigits || 3 });
+  (v: ethers.BigNumber) => parseFloat(ethers.utils.formatUnits(v, decimals)).toLocaleString('en-us', { maximumFractionDigits: maxFractionDigits ?? 3 });
 export const percentNumber = (decimals: number) =>
   (v: ethers.BigNumber) => `${(parseFloat(ethers.utils.formatUnits(v, decimals))*100).toFixed(4)}%`
 
@@ -59,6 +59,11 @@ const Home: NextPage = () => {
             ["Bean:ETH", "bdv", localeNumber(6, 6), [BEANETH, ethers.utils.parseUnits('1', 18)]],
             ["Unripe Beans", "bdv", localeNumber(6, 6), [UNRIPE_BEAN, ethers.utils.parseUnits('1', 6)]],
             ["Unripe Bean:ETH", "bdv", localeNumber(6, 6), [UNRIPE_LP, ethers.utils.parseUnits('1', 6)]],
+            ["Deposited Bean BDV", "getTotalDepositedBdv", localeNumber(6, 0), [BEAN]],
+            ["Deposited Bean:ETH BDV", "getTotalDepositedBdv", localeNumber(6, 0), [BEANETH]],
+            ["Deposited Unripe Bean BDV", "getTotalDepositedBdv", localeNumber(6, 0), [UNRIPE_BEAN]],
+            ["Deposited Unripe LP BDV", "getTotalDepositedBdv", localeNumber(6, 0), [UNRIPE_LP]],
+            ["Total Deposited BDV", "getTotalBdv", localeNumber(6, 0)],
           ]}
           raw={raw}
         />
@@ -69,10 +74,10 @@ const Home: NextPage = () => {
             ["1 BEAN:ETH -> BEAN",          "getAmountOut",   localeNumber(6, 6),  [BEANETH, BEAN, ethers.utils.parseUnits('1', 18)]],
             ["1 urBEAN -> urBEAN:ETH",      "getAmountOut",   localeNumber(6, 6),  [UNRIPE_BEAN, UNRIPE_LP, ethers.utils.parseUnits('1', 6)]],
             ["1 urBEAN:ETH -> urBEAN",      "getAmountOut",   localeNumber(6, 6),  [UNRIPE_LP, UNRIPE_BEAN, ethers.utils.parseUnits('1', 6)]],
-            ["Max: BEAN -> BEAN:ETH",       "getMaxAmountIn", localeNumber(6, 6),  [BEAN, BEANETH]],
-            ["Max: BEAN:ETH -> BEAN",       "getMaxAmountIn", localeNumber(18, 6), [BEANETH, BEAN]],
-            ["Max: urBEAN -> urBEAN:ETH",   "getMaxAmountIn", localeNumber(6, 6),  [UNRIPE_BEAN, UNRIPE_LP]],
-            ["Max: urBEAN:3CRV -> urBEAN",  "getMaxAmountIn", localeNumber(6, 6),  [UNRIPE_LP, UNRIPE_BEAN]],
+            ["Max: BEAN -> BEAN:ETH",       "getMaxAmountIn", localeNumber(6, 0),  [BEAN, BEANETH]],
+            ["Max: BEAN:ETH -> BEAN",       "getMaxAmountIn", localeNumber(18, 0), [BEANETH, BEAN]],
+            ["Max: urBEAN -> urBEAN:ETH",   "getMaxAmountIn", localeNumber(6, 0),  [UNRIPE_BEAN, UNRIPE_LP]],
+            ["Max: urBEAN:3CRV -> urBEAN",  "getMaxAmountIn", localeNumber(6, 0),  [UNRIPE_LP, UNRIPE_BEAN]],
           ]}
           raw={raw}
           multicall={false}
@@ -80,13 +85,36 @@ const Home: NextPage = () => {
       </div>
       <div className={COL_ITEM}>
         <CallsModule
+          title="Silo"
+          slots={[
+            ["Bean Seeds", "tokenSettings", (value: Storage.SiloSettingsStructOutput) => {
+              return localeNumber(6)(value.stalkEarnedPerSeason)
+            }, [BEAN]],
+            ["Bean:ETH Seeds", "tokenSettings", (value: Storage.SiloSettingsStructOutput) => {
+              return localeNumber(6)(value.stalkEarnedPerSeason)
+            }, [BEANETH]],
+            ["Unripe Bean Seeds", "tokenSettings", (value: Storage.SiloSettingsStructOutput) => {
+              return localeNumber(6)(value.stalkEarnedPerSeason)
+            }, [UNRIPE_BEAN]],
+            ["Unripe LP Seeds", "tokenSettings", (value: Storage.SiloSettingsStructOutput) => {
+              return localeNumber(6)(value.stalkEarnedPerSeason)
+            }, [UNRIPE_LP]],
+            ["Bean Stem Tip", "stemTipForToken", undefined, [BEAN]],
+            ["Bean:ETH Stem Tip", "stemTipForToken", undefined, [BEANETH]],
+            ["Unripe Bean Stem Tip", "stemTipForToken", undefined, [UNRIPE_BEAN]],
+            ["Unripe LP Stem Tip", "stemTipForToken", undefined, [UNRIPE_LP]],
+            ["Average Grown Stalk/BDV", "getAverageGrownStalkPerBdv", localeNumber(4, 4)]
+          ]}
+          raw={raw}
+        />
+        <CallsModule
           title="Field"
           slots={[
-            ["Pods", "totalPods", localeNumber(6)],
-            ["Soil", "totalSoil", localeNumber(6)],
-            ["Temperature", "yield", percentNumber(2)],
-            ["Harvested Pods", "totalHarvested", localeNumber(6)],
-            ["Harvestable Index", "harvestableIndex", localeNumber(6)]
+            ["Pods", "totalPods", localeNumber(6, 0)],
+            ["Soil", "totalSoil", localeNumber(6, 0)],
+            ["Temperature", "yield", percentNumber(2, 0)],
+            ["Harvested Pods", "totalHarvested", localeNumber(6, 0)],
+            ["Harvestable Index", "harvestableIndex", localeNumber(6, 0)]
           ]}
           raw={raw}
         />
@@ -98,15 +126,15 @@ const Home: NextPage = () => {
             // Whether the Fertilizer system is being used
             ['Is Fertilizing?', 'isFertilizing', undefined, undefined, 'True if Beanstalk still owes beans to Fertilizer.'],
             // BPF indices
-            ['Current BPF', 'beansPerFertilizer', localeNumber(6), undefined, 'The current number of Beans paid per Fertilizer.'],
-            ['End BPF', 'getEndBpf', localeNumber(6), undefined, 'The BPF at which Fertilizer bought during this Season will stop receiving new Bean mints.'],
+            ['Current BPF', 'beansPerFertilizer', localeNumber(6, 6), undefined, 'The current number of Beans paid per Fertilizer.'],
+            ['End BPF', 'getEndBpf', localeNumber(6, 6), undefined, 'The BPF at which Fertilizer bought during this Season will stop receiving new Bean mints.'],
             // Amounts of Fertilizer, Beans, etc.
-            ['Fertilized Beans', 'totalFertilizedBeans', localeNumber(6), undefined, 'Beans paid to Fertilizer.'],
-            ['Unfertilized Beans', 'totalUnfertilizedBeans', localeNumber(6), undefined, 'Beans owed to Fertilizer.'],
-            ['Fertilized + Unfertilized Beans', 'totalFertilizerBeans', localeNumber(6), undefined, 'Fertilized Beans + Unfertilized Beans'],
+            ['Fertilized Beans', 'totalFertilizedBeans', localeNumber(6, 0), undefined, 'Beans paid to Fertilizer.'],
+            ['Unfertilized Beans', 'totalUnfertilizedBeans', localeNumber(6, 0), undefined, 'Beans owed to Fertilizer.'],
+            ['Fertilized + Unfertilized Beans', 'totalFertilizerBeans', localeNumber(6, 0), undefined, 'Fertilized Beans + Unfertilized Beans'],
             ['Active Fertilizer', 'getActiveFertilizer', localeNumber(0), undefined, 'The number of Fertilizer currently receiving Bean mints.'],
             // Recapitalization Progress
-            ['Remaining Recap', 'remainingRecapitalization', localeNumber(6), undefined, 'The number of USDC remaining to be raised. 1 USDC can purchase 1 FERT.'], // measured in USDC
+            ['Remaining Recap', 'remainingRecapitalization', localeNumber(6, 0), undefined, 'The number of USDC remaining to be raised. 1 USDC can purchase 1 FERT.'], // measured in USDC
             ['Recap Paid Percent', 'getRecapPaidPercent', percentNumber(6)],
           ]}
           raw={raw}
@@ -116,8 +144,8 @@ const Home: NextPage = () => {
           slots={[
             ['Is Unripe? (BEAN)', 'isUnripe', undefined, [UNRIPE_BEAN]],
             ['Is Unripe? (BEAN:ETH)', 'isUnripe', undefined, [UNRIPE_LP]],
-            ['Total Underlying (BEAN)', 'getTotalUnderlying', localeNumber(6), [UNRIPE_BEAN]],
-            ['Total Underlying (BEAN:ETH)', 'getTotalUnderlying', localeNumber(18), [UNRIPE_LP]],
+            ['Total Underlying (BEAN)', 'getTotalUnderlying', localeNumber(6, 0), [UNRIPE_BEAN]],
+            ['Total Underlying (BEAN:ETH)', 'getTotalUnderlying', localeNumber(18, 0), [UNRIPE_LP]],
             ['% of Sprouts Fertilized', 'getRecapPaidPercent', percentNumber(6)],
             ["Underlying Per Unripe----------", 'isUnripe', undefined, [UNRIPE_BEAN]],
             ['Penalized Underlying per Unripe (BEAN)', 'getPenalty', localeNumber(6), [UNRIPE_BEAN]],
