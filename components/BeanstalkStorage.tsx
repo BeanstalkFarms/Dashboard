@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ContractStorage from '@beanstalk/contract-storage';
-const storageLayout = require('../abi/BeanstalkStorageBIP47.json');
+const storageLayout = require('../contracts/storage/BeanstalkStorageBIP47.json');
 import { provider } from '../lib/provider';
 
 interface StorageResult {

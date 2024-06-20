@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react"
 import flatten from 'lodash/flatten';
-import groupBy from 'lodash/groupBy';
-import { RewardEvent, SunriseEvent } from "../generated/Beanstalk";
 import contracts from "../lib/contracts"
 import { provider } from "../lib/provider";
 import { ethers } from "ethers";
@@ -13,7 +11,7 @@ const AVG_SECONDS_PER_BLOCK = 10;
 const AVG_BLOCKS_PER_HOUR = SECONDS_PER_HOUR/AVG_SECONDS_PER_BLOCK;
 const NUM_SEASONS = 5;
 
-type SeasonEventNames = 'WellOracle' | 'SeasonOfPlenty' | 'Reward' | 'Soil' | 'TemperatureChange';// | 'Incentivization';
+type SeasonEventNames = 'WellOracle' | 'SeasonOfPlenty' | 'Reward' | 'Soil' | 'TemperatureChange';
 type Seasons = { [season: string] : { [event: string] : any } };
 const none = <em>None</em>
 
@@ -30,7 +28,7 @@ export function Sunrise({ season, events } : { season: string, events: Seasons[s
             {events['WellOracle'] ? (
               <div className="ml-2">
                 <div>well: {shortenAddress(events['WellOracle'].well.toString())}</div>
-                <div>deltaB: {ethers.utils.formatUnits(events['WellOracle'].deltaB || '0', 6)}</div>
+                <div>deltaB: {parseInt(ethers.utils.formatUnits(events['WellOracle'].deltaB || '0', 6))}</div>
               </div>
             ) : none}
           </div>
@@ -48,8 +46,8 @@ export function Sunrise({ season, events } : { season: string, events: Seasons[s
           {events['SeasonOfPlenty'] ? (
             <div className="ml-2">
               <h2 className="font-bold">SeasonOfPlenty</h2>
-              <div>amount: {events['SeasonOfPlenty'].amount.toString()}</div>
-              <div>toField: {events['SeasonOfPlenty'].toField.toString()}</div>
+              <div>amount: {parseInt(events['SeasonOfPlenty'].amount.toString())}</div>
+              <div>toField: {parseInt(events['SeasonOfPlenty'].toField.toString())}</div>
             </div>
           ) : null}
           {/* Event: Reward */}
@@ -57,9 +55,9 @@ export function Sunrise({ season, events } : { season: string, events: Seasons[s
             <h2 className="font-bold">Reward</h2>
             {events['Reward'] ? (
               <div className="ml-2">
-                <div>toField: {ethers.utils.formatUnits(events['Reward']?.toField || '0', 6)}</div>
-                <div>toSilo: {ethers.utils.formatUnits(events['Reward']?.toSilo || '0', 6)}</div>
-                <div>toFertilizer: {ethers.utils.formatUnits(events['Reward']?.toFertilizer || '0', 6)}</div>
+                <div>toField: {parseInt(ethers.utils.formatUnits(events['Reward']?.toField || '0', 6))}</div>
+                <div>toSilo: {parseInt(ethers.utils.formatUnits(events['Reward']?.toSilo || '0', 6))}</div>
+                <div>toFertilizer: {parseInt(ethers.utils.formatUnits(events['Reward']?.toFertilizer || '0', 6))}</div>
               </div>
             ) : none}
           </div>
@@ -68,16 +66,7 @@ export function Sunrise({ season, events } : { season: string, events: Seasons[s
             <h2 className="font-bold">Soil</h2>
             {events['Soil'] ? (
               <div className="ml-2">
-                <div>soil: {ethers.utils.formatUnits(events['Soil']?.soil || '0', 6)}</div>
-              </div>
-            ) : none}
-          </div>
-          {/* Event: Incentivization */}
-          <div>
-            <h2 className="font-bold">Incentivization</h2>
-            {events['Incentivization'] ? (
-              <div className="ml-2">
-                <div>incentive: {ethers.utils.formatUnits(events['Incentivization']?.amount || '0', 6)}</div>
+                <div>soil: {parseInt(ethers.utils.formatUnits(events['Soil']?.soil || '0', 6))}</div>
               </div>
             ) : none}
           </div>
@@ -115,7 +104,6 @@ export default function Sunrises() {
         ...filters('SeasonOfPlenty'),
         ...filters('Reward'),
         ...filters('Soil'),
-        // ...filters('Incentivization'), // TODO: put this here when the abi has this event
       ]);
       const seasons : Seasons = {};
       const flattened = flatten<TypedEvent<any, { season: number | ethers.BigNumber }>>(queries);

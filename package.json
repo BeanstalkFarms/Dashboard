@@ -7,7 +7,7 @@
     "build": "yarn generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "generate": "typechain --target ethers-v5 --out-dir generated/ ./abi/**/*.json"
+    "generate": "typechain --target ethers-v5 --out-dir generated/ ./contracts/abi/**/*.json"
   },
   "dependencies": {
     "@beanstalk/contract-storage": "^1.0.1",
