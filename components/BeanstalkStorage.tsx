@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import ContractStorage from '@beanstalk/contract-storage';
 const storageLayout = require('../contracts/storage/BeanstalkStorageBIP47.json');
 import { provider } from '../lib/provider';
@@ -8,9 +8,13 @@ interface StorageResult {
   content: any;
 }
 
+interface StorageProps {
+  block?: number;
+}
+
 const beanstalk = new ContractStorage(provider, "0xC1E088fC1323b20BCBee9bd1B9fC9546db5624C5", storageLayout);
 
-export default function BeanstalkStorage() {
+export default function BeanstalkStorage({ block }: StorageProps) {
   const [storageInput, setStorageInput] = useState('');
   const [storageResult, setStorageResult] = useState<StorageResult | null>(null);
 
@@ -25,6 +29,10 @@ export default function BeanstalkStorage() {
       console.log("Requested storage:", path);
       
       let storageSlot = beanstalk;
+      if (block) {
+        console.log('here');
+        storageSlot = storageSlot[block];
+      }
       for (const field of path) {
         storageSlot = storageSlot[field];
       }
