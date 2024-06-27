@@ -30,7 +30,6 @@ export default function BeanstalkStorage({ block }: StorageProps) {
       
       let storageSlot = beanstalk;
       if (block) {
-        console.log('here');
         storageSlot = storageSlot[block];
       }
       for (const field of path) {
@@ -51,6 +50,13 @@ export default function BeanstalkStorage({ block }: StorageProps) {
     }
   };
 
+  // Submit if they pressed the Enter key
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleButtonClick();
+    }
+  };
+
   return (
     <div>
       <input
@@ -58,6 +64,7 @@ export default function BeanstalkStorage({ block }: StorageProps) {
         value={storageInput}
         placeholder="s.a['0xabcd'].s.stalk"
         onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
         style={{ backgroundColor: 'white', color: 'black', padding: '0 4px', width: '100%' }}
       />
       <br/>
