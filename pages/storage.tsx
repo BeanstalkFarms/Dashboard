@@ -27,59 +27,73 @@ const Storage: NextPage = () => {
 
   return (
     <Page>
-      <div style={{
-        display: 'flex',
-        width: '100%'
-      }}>
+      <div className="flex flex-col w-full h-full">
         <div style={{
-          margin: '0 10px 10px 0'
-        }}>
-          Block:
-          <input
-            type="text"
-            value={block}
-            placeholder="latest"
-            onChange={handleBlockChange}
-            style={{
-              backgroundColor: 'white',
-              color: 'black',
-              padding: '0 4px',
-              width: '100px',
-              marginLeft: '5px'
-            }}
-          />
-        </div>
-        
-        <div style={{
-          flex: 1,
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'row',
+          width: '100%'
         }}>
-          <BeanstalkStorage
-            block={block.length > 0 ? parseInt(block) : undefined}
-            onResult={onStorageResult}
-            // Use page native display below
-            displayResult={false}
-          />
-          {results.length > 0 &&
-            <div style={{
-              marginTop: '10px',
-              flex: 1,
-              overflowY: 'auto'
-            }}>
-              {results.map((r: HistoryResult) =>
+          <div style={{
+            margin: '0 10px 10px 0'
+          }}>
+            Block:
+            <input
+              type="text"
+              value={block}
+              placeholder="latest"
+              onChange={handleBlockChange}
+              style={{
+                backgroundColor: 'white',
+                color: 'black',
+                padding: '0 4px',
+                width: '100px',
+                marginLeft: '5px'
+              }}
+            />
+          </div>
+          
+          <div style={{
+            flex: 1
+          }}>
+            <BeanstalkStorage
+              block={block.length > 0 ? parseInt(block) : undefined}
+              onResult={onStorageResult}
+              // Use page native display below
+              displayResult={false}
+            />
+          </div>
+        </div>
+
+        {results.length > 0 &&
+          <div style={{
+            overflowY: 'auto',
+            marginTop: '10px',
+            marginLeft: '50px'
+          }}>
+            {results.map((r: HistoryResult) =>
+              <div style={{
+                padding: '5px',
+                border: '1px solid white',
+                display: 'flex',
+                flexDirection: 'row'
+              }}>
                 <div style={{
-                  padding: '5px',
-                  border: '1px solid white'
+                  flexBasis: '85px',
+                  margin: '10px'
                 }}>
-                  ({r.block}) {shortenAllAddresses(r.inputPath)}
+                  {r.block}
+                </div>
+                <div style={{
+                  flex: 1
+                }}>
+                  {shortenAllAddresses(r.inputPath)}
                   <br/>
                   {r.content.toString()}
                 </div>
-              )}
-            </div>
-          }
-        </div>
+              </div>
+            )}
+          </div>
+        }
       </div>
     </Page>
   )
