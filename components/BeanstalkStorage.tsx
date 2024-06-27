@@ -89,7 +89,7 @@ const BeanstalkStorage = forwardRef<BeanstalkStorageRef, StorageProps>(({ block,
       <input
         type="text"
         value={storageInput}
-        placeholder="s.a['0xabcd'].s.stalk"
+        placeholder="s.a[0xabcd].s.stalk"
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         style={{ backgroundColor: 'white', color: 'black', padding: '0 4px', width: '100%' }}
