@@ -81,13 +81,16 @@ const Storage: NextPage = () => {
             marginTop: '10px',
             marginLeft: '50px'
           }}>
-            {results.map((r: HistoryResult) =>
-              <div style={{
-                padding: '5px',
-                border: '1px solid white',
-                display: 'flex',
-                flexDirection: 'row'
-              }}>
+            {results.map((r: HistoryResult, idx: number) =>
+              <div
+                key={idx}
+                style={{
+                  padding: '5px',
+                  border: '1px solid white',
+                  display: 'flex',
+                  flexDirection: 'row'
+                }}
+              >
                 <div style={{
                   flexBasis: '85px',
                   margin: '10px'

@@ -139,5 +139,6 @@ const BeanstalkStorage = forwardRef<BeanstalkStorageRef, StorageProps>(({ block,
     </div>
   )
 });
+BeanstalkStorage.displayName = 'BeanstalkStorage';
 
 export default BeanstalkStorage;

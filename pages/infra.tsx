@@ -61,7 +61,7 @@ const Subgraph : React.FC<{ queryUrl: string, webpageUrl: string, sgName: string
     const data = await checkSubgraphStatus(queryUrl, sgName.includes("beanstalk"))
     setData(data);
     setLoading(false);
-  }, [queryUrl]);
+  }, [queryUrl, sgName]);
 
   useEffect(() => {
     if (!intv) {
