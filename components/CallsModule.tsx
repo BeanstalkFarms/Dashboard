@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Contract } from 'ethers-multicall';
-import { shortenAddress } from '../utils/stringUtils'; 
 
 import contracts from '../lib/contracts';
 import { Beanstalk } from '../generated';
 import { ethcallProvider } from '../lib/provider';
 import Module from './Module';
+import { shortenAddress } from '../lib/utils';
 
 type ModuleSlot = [
   name: string,

@@ -14,6 +14,7 @@ const Page : React.FC<{
       <div className="flex flex-row items-center space-x-4">
         <div><Link href="/">Protocol</Link></div>
         <div><Link href="/infra">Subgraphs</Link></div>
+        <div><Link href="/storage">Contract Storage</Link></div>
       </div>
         <div className="flex flex-row items-center space-x-1 cursor">
           {rightHeader}
