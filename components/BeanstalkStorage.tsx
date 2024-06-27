@@ -3,20 +3,37 @@ import ContractStorage from '@beanstalk/contract-storage';
 const storageLayout = require('../contracts/storage/BeanstalkStorageBIP47.json');
 import { provider } from '../lib/provider';
 
-interface StorageResult {
-  slot?: BigInt;
+export interface StorageResult {
+  slot?: BigInt; // optional in case of 'ERROR' content
   content: any;
+}
+
+export interface HistoryResult extends StorageResult {
+  block: string;
+  inputPath: string;
 }
 
 interface StorageProps {
   block?: number;
+  onResult?: (result: HistoryResult) => void;
+  displayResult: boolean;
 }
 
 const beanstalk = new ContractStorage(provider, "0xC1E088fC1323b20BCBee9bd1B9fC9546db5624C5", storageLayout);
 
-export default function BeanstalkStorage({ block }: StorageProps) {
+export default function BeanstalkStorage({ block, onResult, displayResult }: StorageProps) {
   const [storageInput, setStorageInput] = useState('');
   const [storageResult, setStorageResult] = useState<StorageResult | null>(null);
+
+  const newResult = (result: StorageResult) => {
+    setStorageResult(result);
+    // Report the result to the parent (if applicable)
+    onResult?.({
+      ...result,
+      block: block?.toString() ?? 'latest',
+      inputPath: storageInput
+    });
+  }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStorageInput(event.target.value);
@@ -26,7 +43,6 @@ export default function BeanstalkStorage({ block }: StorageProps) {
     // Transform the input, remove brackets and quotes before constructing the path
     try {
       const path = storageInput.replace(/['\]"]/g, "").replaceAll('[', '.').split('.');
-      console.log("Requested storage:", path);
       
       let storageSlot = beanstalk;
       if (block) {
@@ -39,12 +55,12 @@ export default function BeanstalkStorage({ block }: StorageProps) {
       let slot = storageSlot.slot;
       let content = await storageSlot;
 
-      setStorageResult({
+      newResult({
         slot,
         content
       });
     } catch (e) {
-      setStorageResult({
+      newResult({
         content: 'ERROR'
       });
     }
@@ -85,7 +101,7 @@ export default function BeanstalkStorage({ block }: StorageProps) {
         Find in Storage
       </button>
       {
-        storageResult && 
+        displayResult && storageResult && 
         <div>
           {
             storageResult.slot &&

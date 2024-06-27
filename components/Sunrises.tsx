@@ -4,7 +4,7 @@ import contracts from "../lib/contracts"
 import { provider } from "../lib/provider";
 import { ethers } from "ethers";
 import { TypedEvent } from "../generated/common";
-import { shortenAddress } from "../utils/stringUtils";
+import { shortenAddress } from "../lib/utils";
 
 const SECONDS_PER_HOUR  = 60*60;
 const AVG_SECONDS_PER_BLOCK = 10;

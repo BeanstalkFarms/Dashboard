@@ -7,7 +7,7 @@ import FertQueue from '../components/FertQueue';
 import BeanstalkStorage from '../components/BeanstalkStorage';
 import { Storage } from '../generated/Beanstalk'; 
 import Page from '../components/layout/Page';
-import { shortenAddress } from '../utils/stringUtils';
+import { shortenAddress } from '../lib/utils';
 
 const BEAN        = "0xBEA0000029AD1c77D3d5D23Ba2D8893dB9d1Efab";
 const BEANCRV3    = "0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49";
@@ -51,7 +51,7 @@ const Home: NextPage = () => {
           ]}
           raw={raw}
         />
-        <BeanstalkStorage />
+        <BeanstalkStorage displayResult={true} />
       </div>
       <div className={COL_ITEM}>
         <CallsModule
