@@ -67,7 +67,7 @@ const Storage: NextPage = () => {
           }}>
             <BeanstalkStorage
               ref={storageRef}
-              block={block.length > 0 ? parseInt(block) : undefined}
+              block={block.length > 0 && !isNaN(parseInt(block)) ? parseInt(block) : undefined}
               onResult={onStorageResult}
               // Use page native display below
               displayResult={false}
