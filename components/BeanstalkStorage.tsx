@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import ContractStorage from '@beanstalk/contract-storage';
 const storageLayout = require('../contracts/storage/BeanstalkStorageBIP47.json');
 import { provider } from '../lib/provider';
@@ -13,7 +13,11 @@ export interface HistoryResult extends StorageResult {
   inputPath: string;
 }
 
-interface StorageProps {
+export interface BeanstalkStorageRef {
+  handleSubmit: () => void;
+}
+
+export interface StorageProps {
   block?: number;
   onResult?: (result: HistoryResult) => void;
   displayResult: boolean;
@@ -21,9 +25,16 @@ interface StorageProps {
 
 const beanstalk = new ContractStorage(provider, "0xC1E088fC1323b20BCBee9bd1B9fC9546db5624C5", storageLayout);
 
-export default function BeanstalkStorage({ block, onResult, displayResult }: StorageProps) {
+const BeanstalkStorage = forwardRef<BeanstalkStorageRef, StorageProps>(({ block, onResult, displayResult }: StorageProps, ref) => {
   const [storageInput, setStorageInput] = useState('');
   const [storageResult, setStorageResult] = useState<StorageResult | null>(null);
+
+  // Allows calling into handleButtonClick from a parent component using a ref
+  useImperativeHandle(ref, () => ({
+    handleSubmit: () => {
+      handleButtonClick();
+    }
+  }));
 
   const newResult = (result: StorageResult) => {
     setStorageResult(result);
@@ -127,4 +138,6 @@ export default function BeanstalkStorage({ block, onResult, displayResult }: Sto
       }
     </div>
   )
-}
+});
+
+export default BeanstalkStorage;

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import type { NextPage } from 'next'
 import Page from '../components/layout/Page';
-import BeanstalkStorage, { HistoryResult } from '../components/BeanstalkStorage';
+import BeanstalkStorage, { BeanstalkStorageRef, HistoryResult } from '../components/BeanstalkStorage';
 import { shortenAddress } from '../lib/utils';
 
 const shortenAllAddresses = (storagePath: string): string => {
@@ -14,8 +14,17 @@ const Storage: NextPage = () => {
   const [block, setBlock] = useState('');
   const [results, setResults] = useState<HistoryResult[]>([]);
 
+  const storageRef = useRef<BeanstalkStorageRef>(null);
+
   const handleBlockChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBlock(event.target.value);
+  };
+
+  // Submit if they pressed the Enter key
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      storageRef.current?.handleSubmit();
+    }
   };
 
   const onStorageResult = (result: HistoryResult) => {
@@ -42,6 +51,7 @@ const Storage: NextPage = () => {
               value={block}
               placeholder="latest"
               onChange={handleBlockChange}
+              onKeyDown={handleKeyDown}
               style={{
                 backgroundColor: 'white',
                 color: 'black',
@@ -56,6 +66,7 @@ const Storage: NextPage = () => {
             flex: 1
           }}>
             <BeanstalkStorage
+              ref={storageRef}
               block={block.length > 0 ? parseInt(block) : undefined}
               onResult={onStorageResult}
               // Use page native display below
