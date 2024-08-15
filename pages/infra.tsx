@@ -83,7 +83,7 @@ const Subgraph : React.FC<{ queryUrl: string, webpageUrl: string, sgName: string
         </a>
         <br/>
         <p style={{ fontSize: 'smaller', color: 'gray', marginLeft: '10px' }}>
-          {data?.version.subgraphName}
+          {data?.version?.subgraphName}
         </p>
       </td>
       <td>{data?._meta.block.number || '-'}</td>
