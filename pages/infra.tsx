@@ -91,7 +91,7 @@ const Subgraph : React.FC<{ queryUrl: string, webpageUrl: string, sgName: string
       <td>{data?.version?.versionNumber || '-'}</td>
       <td>{data?.version?.chain || '-'}</td>
       <td className="text-xs" onClick={copyDeployHash} style={{ cursor: 'pointer' }}>{data?._meta.deployment || '-'}</td>
-      <td>{loading ? 'loading...' : null}</td>
+      <td style={{paddingLeft: '30px'}}>{loading ? 'loading...' : null}</td>
     </tr>
   )
 }
