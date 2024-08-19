@@ -12,6 +12,7 @@ import { shortenAddress } from '../lib/utils';
 const BEAN        = "0xBEA0000029AD1c77D3d5D23Ba2D8893dB9d1Efab";
 const BEANCRV3    = "0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49";
 const BEANETH     = "0xBEA0e11282e2bB5893bEcE110cF199501e872bAd";
+const BEANWSTETH  = "0xBeA0000113B0d182f4064C86B71c315389E4715D";
 const UNRIPE_BEAN = "0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449";
 const UNRIPE_LP   = "0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D";
 
@@ -59,10 +60,12 @@ const Home: NextPage = () => {
           slots={[
             ["Beans", "bdv", localeNumber(6, 6), [BEAN, ethers.utils.parseUnits('1', 6)]],
             ["Bean:ETH", "bdv", localeNumber(6, 6), [BEANETH, ethers.utils.parseUnits('1', 18)]],
+            ["Bean:wstETH", "bdv", localeNumber(6, 6), [BEANWSTETH, ethers.utils.parseUnits('1', 18)]],
             ["Unripe Beans", "bdv", localeNumber(6, 6), [UNRIPE_BEAN, ethers.utils.parseUnits('1', 6)]],
-            ["Unripe Bean:ETH", "bdv", localeNumber(6, 6), [UNRIPE_LP, ethers.utils.parseUnits('1', 6)]],
+            ["Unripe Bean:wstETH", "bdv", localeNumber(6, 6), [UNRIPE_LP, ethers.utils.parseUnits('1', 6)]],
             ["Deposited Bean BDV", "getTotalDepositedBdv", localeNumber(6, 0), [BEAN]],
             ["Deposited Bean:ETH BDV", "getTotalDepositedBdv", localeNumber(6, 0), [BEANETH]],
+            ["Deposited Bean:wstETH BDV", "getTotalDepositedBdv", localeNumber(6, 0), [BEANWSTETH]],
             ["Deposited Unripe Bean BDV", "getTotalDepositedBdv", localeNumber(6, 0), [UNRIPE_BEAN]],
             ["Deposited Unripe LP BDV", "getTotalDepositedBdv", localeNumber(6, 0), [UNRIPE_LP]],
             ["Total Deposited BDV", "getTotalBdv", localeNumber(6, 0)],
@@ -74,12 +77,16 @@ const Home: NextPage = () => {
           slots={[
             ["1 BEAN -> BEAN:ETH",       "getAmountOut",   localeNumber(18, 6), [BEAN, BEANETH, ethers.utils.parseUnits('1', 6)]],
             ["1 BEAN:ETH -> BEAN",       "getAmountOut",   localeNumber(6, 6),  [BEANETH, BEAN, ethers.utils.parseUnits('1', 18)]],
-            ["1 urBEAN -> urBEAN:ETH",   "getAmountOut",   localeNumber(6, 6),  [UNRIPE_BEAN, UNRIPE_LP, ethers.utils.parseUnits('1', 6)]],
-            ["1 urBEAN:ETH -> urBEAN",   "getAmountOut",   localeNumber(6, 6),  [UNRIPE_LP, UNRIPE_BEAN, ethers.utils.parseUnits('1', 6)]],
+            ["1 BEAN -> BEAN:wstETH",       "getAmountOut",   localeNumber(18, 6), [BEAN, BEANWSTETH, ethers.utils.parseUnits('1', 6)]],
+            ["1 BEAN:wstETH -> BEAN",       "getAmountOut",   localeNumber(6, 6),  [BEANWSTETH, BEAN, ethers.utils.parseUnits('1', 18)]],
+            ["1 urBEAN -> urBEAN:wstETH",   "getAmountOut",   localeNumber(6, 6),  [UNRIPE_BEAN, UNRIPE_LP, ethers.utils.parseUnits('1', 6)]],
+            ["1 urBEAN:wstETH -> urBEAN",   "getAmountOut",   localeNumber(6, 6),  [UNRIPE_LP, UNRIPE_BEAN, ethers.utils.parseUnits('1', 6)]],
             ["Max: BEAN -> BEAN:ETH",    "getMaxAmountIn", localeNumber(6, 0),  [BEAN, BEANETH]],
             ["Max: BEAN:ETH -> BEAN",    "getMaxAmountIn", localeNumber(18, 0), [BEANETH, BEAN]],
-            ["Max: urBEAN -> urBEANETH", "getMaxAmountIn", localeNumber(6, 0),  [UNRIPE_BEAN, UNRIPE_LP]],
-            ["Max: urBEANETH -> urBEAN", "getMaxAmountIn", localeNumber(6, 0),  [UNRIPE_LP, UNRIPE_BEAN]],
+            ["Max: BEAN -> BEAN:wstETH",    "getMaxAmountIn", localeNumber(6, 0),  [BEAN, BEANWSTETH]],
+            ["Max: BEAN:wstETH -> BEAN",    "getMaxAmountIn", localeNumber(18, 0), [BEANWSTETH, BEAN]],
+            ["Max: urBEAN -> urBEANwstETH", "getMaxAmountIn", localeNumber(6, 0),  [UNRIPE_BEAN, UNRIPE_LP]],
+            ["Max: urBEANwstETH -> urBEAN", "getMaxAmountIn", localeNumber(6, 0),  [UNRIPE_LP, UNRIPE_BEAN]],
           ]}
           raw={raw}
           multicall={false}
@@ -103,6 +110,7 @@ const Home: NextPage = () => {
             }, [UNRIPE_LP]],
             ["Bean Stem Tip", "stemTipForToken", undefined, [BEAN]],
             ["Bean:ETH Stem Tip", "stemTipForToken", undefined, [BEANETH]],
+            ["Bean:wstETH Stem Tip", "stemTipForToken", undefined, [BEANWSTETH]],
             ["Unripe Bean Stem Tip", "stemTipForToken", undefined, [UNRIPE_BEAN]],
             ["Unripe LP Stem Tip", "stemTipForToken", undefined, [UNRIPE_LP]],
             ["Average Grown Stalk/BDV", "getAverageGrownStalkPerBdv", localeNumber(4, 4)]
@@ -145,20 +153,20 @@ const Home: NextPage = () => {
           title="Unripe"
           slots={[
             ['Is Unripe? (BEAN)', 'isUnripe', undefined, [UNRIPE_BEAN]],
-            ['Is Unripe? (BEAN:ETH)', 'isUnripe', undefined, [UNRIPE_LP]],
+            ['Is Unripe? (BEAN:wstETH)', 'isUnripe', undefined, [UNRIPE_LP]],
             ['Total Underlying (BEAN)', 'getTotalUnderlying', localeNumber(6, 0), [UNRIPE_BEAN]],
-            ['Total Underlying (BEAN:ETH)', 'getTotalUnderlying', localeNumber(18, 0), [UNRIPE_LP]],
+            ['Total Underlying (BEAN:wstETH)', 'getTotalUnderlying', localeNumber(18, 0), [UNRIPE_LP]],
             ['% of Sprouts Fertilized', 'getRecapPaidPercent', percentNumber(6)],
             ["Underlying Per Unripe----------", 'isUnripe', undefined, [UNRIPE_BEAN]],
             ['Penalized Underlying per Unripe (BEAN)', 'getPenalty', localeNumber(6), [UNRIPE_BEAN]],
-            ['Penalized Underlying per Unripe (BEAN:ETH)', 'getPenalty', localeNumber(18), [UNRIPE_LP]],
+            ['Penalized Underlying per Unripe (BEAN:wstETH)', 'getPenalty', localeNumber(18), [UNRIPE_LP]],
             ['Underlying per Unripe (BEAN)', 'getUnderlyingPerUnripeToken', localeNumber(6), [UNRIPE_BEAN]],
-            ['Underlying per Unripe (BEAN:ETH)', 'getUnderlyingPerUnripeToken', localeNumber(18), [UNRIPE_LP]],
+            ['Underlying per Unripe (BEAN:wstETH)', 'getUnderlyingPerUnripeToken', localeNumber(18), [UNRIPE_LP]],
             ["Chop Rate-------------", 'isUnripe', undefined, [UNRIPE_BEAN]],
             ['Chop Rate (BEAN)', 'getPercentPenalty', percentNumber(6), [UNRIPE_BEAN]],
-            ['Chop Rate (BEAN:ETH)', 'getPercentPenalty', percentNumber(6), [UNRIPE_LP]],
+            ['Chop Rate (BEAN:wstETH)', 'getPercentPenalty', percentNumber(6), [UNRIPE_LP]],
             ['% Recapitalized (BEAN)', 'getRecapFundedPercent', percentNumber(6), [UNRIPE_BEAN]],
-            ['% Recapitalized (BEAN:ETH)', 'getRecapFundedPercent', percentNumber(6), [UNRIPE_LP]],
+            ['% Recapitalized (BEAN:wstETH)', 'getRecapFundedPercent', percentNumber(6), [UNRIPE_LP]],
           ]}
           raw={raw}
         />
