@@ -6,9 +6,6 @@ import { ethers } from "ethers";
 import { TypedEvent } from "../generated/common";
 import { shortenAddress } from "../lib/utils";
 
-const SECONDS_PER_HOUR  = 60*60;
-const AVG_SECONDS_PER_BLOCK = 10;
-const AVG_BLOCKS_PER_HOUR = SECONDS_PER_HOUR/AVG_SECONDS_PER_BLOCK;
 const NUM_SEASONS = 5;
 
 type SeasonEventNames = 'WellOracle' | 'SeasonOfPlenty' | 'Reward' | 'Soil' | 'TemperatureChange';
@@ -32,7 +29,7 @@ export function Sunrise({ season, events } : { season: string, events: Seasons[s
               </div>
             ) : none}
           </div>
-          {/* Event: WeatherChange */}
+          {/* Event: TemperatureChange */}
           <div>
             <h2 className="font-bold">TemperatureChange</h2>
             {events['TemperatureChange'] ? (

@@ -2,6 +2,7 @@ import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import ContractStorage from '@beanstalk/contract-storage';
 const storageLayout = require('../contracts/storage/BeanstalkStorageBIP47.json');
 import { provider } from '../lib/provider';
+import { BEANSTALK } from '../lib/constants';
 
 export interface StorageResult {
   slot?: BigInt; // optional in case of 'ERROR' content
@@ -23,7 +24,7 @@ export interface StorageProps {
   displayResult: boolean;
 }
 
-const beanstalk = new ContractStorage(provider, "0xC1E088fC1323b20BCBee9bd1B9fC9546db5624C5", storageLayout);
+const beanstalk = new ContractStorage(provider, BEANSTALK, storageLayout);
 
 const BeanstalkStorage = forwardRef<BeanstalkStorageRef, StorageProps>(({ block, onResult, displayResult }: StorageProps, ref) => {
   const [storageInput, setStorageInput] = useState('');

@@ -1,21 +1,14 @@
 import React, { useState } from 'react';
 import type { NextPage } from 'next'
 import CallsModule from '../components/CallsModule';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import Sunrises from '../components/Sunrises';
 import FertQueue from '../components/FertQueue';
 import BeanstalkStorage from '../components/BeanstalkStorage';
 import { Storage } from '../generated/Beanstalk'; 
 import Page from '../components/layout/Page';
 import { shortenAddress } from '../lib/utils';
-
-const BEAN        = "0xBEA0000029AD1c77D3d5D23Ba2D8893dB9d1Efab";
-const BEANCRV3    = "0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49";
-const BEANETH     = "0xBEA0e11282e2bB5893bEcE110cF199501e872bAd";
-const BEANWSTETH  = "0xBeA0000113B0d182f4064C86B71c315389E4715D";
-const UNRIPE_BEAN = "0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449";
-const UNRIPE_LP   = "0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D";
-
+import { BEAN, BEANETH, BEANWSTETH, UNRIPE_BEAN, UNRIPE_LP } from '../lib/constants';
 
 export const localeNumber = (decimals: number, maxFractionDigits?: number) => 
   (v: ethers.BigNumber) => parseFloat(ethers.utils.formatUnits(v, decimals)).toLocaleString('en-us', { maximumFractionDigits: maxFractionDigits ?? 3 });
@@ -59,12 +52,10 @@ const Home: NextPage = () => {
           title="BDV"
           slots={[
             ["Beans", "bdv", localeNumber(6, 6), [BEAN, ethers.utils.parseUnits('1', 6)]],
-            ["Bean:ETH", "bdv", localeNumber(6, 6), [BEANETH, ethers.utils.parseUnits('1', 18)]],
             ["Bean:wstETH", "bdv", localeNumber(6, 6), [BEANWSTETH, ethers.utils.parseUnits('1', 18)]],
             ["Unripe Beans", "bdv", localeNumber(6, 6), [UNRIPE_BEAN, ethers.utils.parseUnits('1', 6)]],
             ["Unripe Bean:wstETH", "bdv", localeNumber(6, 6), [UNRIPE_LP, ethers.utils.parseUnits('1', 6)]],
             ["Deposited Bean BDV", "getTotalDepositedBdv", localeNumber(6, 0), [BEAN]],
-            ["Deposited Bean:ETH BDV", "getTotalDepositedBdv", localeNumber(6, 0), [BEANETH]],
             ["Deposited Bean:wstETH BDV", "getTotalDepositedBdv", localeNumber(6, 0), [BEANWSTETH]],
             ["Deposited Unripe Bean BDV", "getTotalDepositedBdv", localeNumber(6, 0), [UNRIPE_BEAN]],
             ["Deposited Unripe LP BDV", "getTotalDepositedBdv", localeNumber(6, 0), [UNRIPE_LP]],
@@ -75,14 +66,10 @@ const Home: NextPage = () => {
         <CallsModule
           title="Convert"
           slots={[
-            ["1 BEAN -> BEAN:ETH",       "getAmountOut",   localeNumber(18, 6), [BEAN, BEANETH, ethers.utils.parseUnits('1', 6)]],
-            ["1 BEAN:ETH -> BEAN",       "getAmountOut",   localeNumber(6, 6),  [BEANETH, BEAN, ethers.utils.parseUnits('1', 18)]],
             ["1 BEAN -> BEAN:wstETH",       "getAmountOut",   localeNumber(18, 6), [BEAN, BEANWSTETH, ethers.utils.parseUnits('1', 6)]],
             ["1 BEAN:wstETH -> BEAN",       "getAmountOut",   localeNumber(6, 6),  [BEANWSTETH, BEAN, ethers.utils.parseUnits('1', 18)]],
             ["1 urBEAN -> urBEAN:wstETH",   "getAmountOut",   localeNumber(6, 6),  [UNRIPE_BEAN, UNRIPE_LP, ethers.utils.parseUnits('1', 6)]],
             ["1 urBEAN:wstETH -> urBEAN",   "getAmountOut",   localeNumber(6, 6),  [UNRIPE_LP, UNRIPE_BEAN, ethers.utils.parseUnits('1', 6)]],
-            ["Max: BEAN -> BEAN:ETH",    "getMaxAmountIn", localeNumber(6, 0),  [BEAN, BEANETH]],
-            ["Max: BEAN:ETH -> BEAN",    "getMaxAmountIn", localeNumber(18, 0), [BEANETH, BEAN]],
             ["Max: BEAN -> BEAN:wstETH",    "getMaxAmountIn", localeNumber(6, 0),  [BEAN, BEANWSTETH]],
             ["Max: BEAN:wstETH -> BEAN",    "getMaxAmountIn", localeNumber(18, 0), [BEANWSTETH, BEAN]],
             ["Max: urBEAN -> urBEANwstETH", "getMaxAmountIn", localeNumber(6, 0),  [UNRIPE_BEAN, UNRIPE_LP]],
@@ -97,19 +84,18 @@ const Home: NextPage = () => {
           title="Silo"
           slots={[
             ["Bean Seeds", "tokenSettings", (value: Storage.SiloSettingsStructOutput) => {
-              return localeNumber(6)(value.stalkEarnedPerSeason)
+              return localeNumber(6)(BigNumber.from(value.stalkEarnedPerSeason))
             }, [BEAN]],
             ["Bean:ETH Seeds", "tokenSettings", (value: Storage.SiloSettingsStructOutput) => {
-              return localeNumber(6)(value.stalkEarnedPerSeason)
+              return localeNumber(6)(BigNumber.from(value.stalkEarnedPerSeason))
             }, [BEANETH]],
             ["Unripe Bean Seeds", "tokenSettings", (value: Storage.SiloSettingsStructOutput) => {
-              return localeNumber(6)(value.stalkEarnedPerSeason)
+              return localeNumber(6)(BigNumber.from(value.stalkEarnedPerSeason))
             }, [UNRIPE_BEAN]],
             ["Unripe LP Seeds", "tokenSettings", (value: Storage.SiloSettingsStructOutput) => {
-              return localeNumber(6)(value.stalkEarnedPerSeason)
+              return localeNumber(6)(BigNumber.from(value.stalkEarnedPerSeason))
             }, [UNRIPE_LP]],
             ["Bean Stem Tip", "stemTipForToken", undefined, [BEAN]],
-            ["Bean:ETH Stem Tip", "stemTipForToken", undefined, [BEANETH]],
             ["Bean:wstETH Stem Tip", "stemTipForToken", undefined, [BEANWSTETH]],
             ["Unripe Bean Stem Tip", "stemTipForToken", undefined, [UNRIPE_BEAN]],
             ["Unripe LP Stem Tip", "stemTipForToken", undefined, [UNRIPE_LP]],
