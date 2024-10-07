@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import ContractStorage from '@beanstalk/contract-storage';
-const storageLayout = require('../contracts/storage/BeanstalkStorageBIP47.json');
+const storageLayout = require('../contracts/storage/BeanstalkStorageBIP50.json');
 import { provider } from '../lib/provider';
 import { BEANSTALK } from '../lib/constants';
 
