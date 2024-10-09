@@ -23,10 +23,9 @@ const activateListeners = (
     'Sunrise',
     'Reward',
     'SeasonOfPlenty',
-    'WeatherChange',
+    'TemperatureChange',
     'Unpause',
     'Soil',
-    'MetapoolOracle',
     'Incentivization',
     /// Balances
     'InternalBalanceChanged',
@@ -41,12 +40,8 @@ const activateListeners = (
     'ChangeUnderlying',
     /// Silo
     'AddDeposit',
-    'AddWithdrawal',
     'RemoveDeposit',
     'RemoveDeposits',
-    'RemoveWithdrawal',
-    'RemoveWithdrawals',
-    'Earn',
     'StalkBalanceChanged(address,int256,int256)',
     'SeedsBalanceChanged',
     /// Convert
