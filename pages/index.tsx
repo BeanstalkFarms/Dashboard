@@ -8,7 +8,7 @@ import BeanstalkStorage from '../components/BeanstalkStorage';
 import { Storage } from '../generated/Beanstalk'; 
 import Page from '../components/layout/Page';
 import { shortenAddress } from '../lib/utils';
-import { BEAN, BEANETH, BEANWSTETH, UNRIPE_BEAN, UNRIPE_LP } from '../lib/constants';
+import { BEAN, BEANETH, BEANWSTETH, BEANWEETH, BEANWBTC, BEANUSDC, BEANUSDT, UNRIPE_BEAN, UNRIPE_LP } from '../lib/constants';
 
 export const localeNumber = (decimals: number, maxFractionDigits?: number) => 
   (v: ethers.BigNumber) => parseFloat(ethers.utils.formatUnits(v, decimals)).toLocaleString('en-us', { maximumFractionDigits: maxFractionDigits ?? 3 });
@@ -52,11 +52,21 @@ const Home: NextPage = () => {
           title="BDV"
           slots={[
             ["Beans", "bdv", localeNumber(6, 6), [BEAN, ethers.utils.parseUnits('1', 6)]],
+            ["Bean:WETH", "bdv", localeNumber(6, 6), [BEANETH, ethers.utils.parseUnits('1', 18)]],
             ["Bean:wstETH", "bdv", localeNumber(6, 6), [BEANWSTETH, ethers.utils.parseUnits('1', 18)]],
+            // ["Bean:weETH", "bdv", localeNumber(6, 6), [BEANWEETH, ethers.utils.parseUnits('1', 18)]],
+            // ["Bean:wBTC", "bdv", localeNumber(6, 6), [BEANWBTC, ethers.utils.parseUnits('1', 18)]],
+            ["Bean:USDC", "bdv", localeNumber(6, 6), [BEANUSDC, ethers.utils.parseUnits('1', 18)]],
+            // ["Bean:USDT", "bdv", localeNumber(6, 6), [BEANUSDT, ethers.utils.parseUnits('1', 18)]],
             ["Unripe Beans", "bdv", localeNumber(6, 6), [UNRIPE_BEAN, ethers.utils.parseUnits('1', 6)]],
             ["Unripe Bean:wstETH", "bdv", localeNumber(6, 6), [UNRIPE_LP, ethers.utils.parseUnits('1', 6)]],
             ["Deposited Bean BDV", "getTotalDepositedBdv", localeNumber(6, 0), [BEAN]],
+            ["Deposited Bean:WETH BDV", "getTotalDepositedBdv", localeNumber(6, 0), [BEANETH]],
             ["Deposited Bean:wstETH BDV", "getTotalDepositedBdv", localeNumber(6, 0), [BEANWSTETH]],
+            // ["Deposited Bean:weETH BDV", "getTotalDepositedBdv", localeNumber(6, 0), [BEANWEETH]],
+            // ["Deposited Bean:wBTC BDV", "getTotalDepositedBdv", localeNumber(6, 0), [BEANWBTC]],
+            ["Deposited Bean:USDC BDV", "getTotalDepositedBdv", localeNumber(6, 0), [BEANUSDC]],
+            // ["Deposited Bean:USDT BDV", "getTotalDepositedBdv", localeNumber(6, 0), [BEANUSDT]],
             ["Deposited Unripe Bean BDV", "getTotalDepositedBdv", localeNumber(6, 0), [UNRIPE_BEAN]],
             ["Deposited Unripe LP BDV", "getTotalDepositedBdv", localeNumber(6, 0), [UNRIPE_LP]],
             ["Total Deposited BDV", "getTotalBdv", localeNumber(6, 0)],
@@ -66,12 +76,20 @@ const Home: NextPage = () => {
         <CallsModule
           title="Convert"
           slots={[
+            ["1 BEAN -> BEAN:WETH",         "getAmountOut",   localeNumber(18, 6), [BEAN, BEANETH, ethers.utils.parseUnits('1', 6)]],
+            ["1 BEAN:WETH -> BEAN",         "getAmountOut",   localeNumber(6, 6),  [BEANETH, BEAN, ethers.utils.parseUnits('1', 18)]],
             ["1 BEAN -> BEAN:wstETH",       "getAmountOut",   localeNumber(18, 6), [BEAN, BEANWSTETH, ethers.utils.parseUnits('1', 6)]],
             ["1 BEAN:wstETH -> BEAN",       "getAmountOut",   localeNumber(6, 6),  [BEANWSTETH, BEAN, ethers.utils.parseUnits('1', 18)]],
+            ["1 BEAN -> BEAN:USDC",         "getAmountOut",   localeNumber(18, 6), [BEAN, BEANUSDC, ethers.utils.parseUnits('1', 6)]],
+            ["1 BEAN:USDC -> BEAN",         "getAmountOut",   localeNumber(6, 6),  [BEANUSDC, BEAN, ethers.utils.parseUnits('1', 18)]],
             ["1 urBEAN -> urBEAN:wstETH",   "getAmountOut",   localeNumber(6, 6),  [UNRIPE_BEAN, UNRIPE_LP, ethers.utils.parseUnits('1', 6)]],
             ["1 urBEAN:wstETH -> urBEAN",   "getAmountOut",   localeNumber(6, 6),  [UNRIPE_LP, UNRIPE_BEAN, ethers.utils.parseUnits('1', 6)]],
+            ["Max: BEAN -> BEAN:WETH",      "getMaxAmountIn", localeNumber(6, 0),  [BEAN, BEANETH]],
+            ["Max: BEAN:WETH -> BEAN",      "getMaxAmountIn", localeNumber(18, 0), [BEANETH, BEAN]],
             ["Max: BEAN -> BEAN:wstETH",    "getMaxAmountIn", localeNumber(6, 0),  [BEAN, BEANWSTETH]],
             ["Max: BEAN:wstETH -> BEAN",    "getMaxAmountIn", localeNumber(18, 0), [BEANWSTETH, BEAN]],
+            ["Max: BEAN -> BEAN:USDC",      "getMaxAmountIn", localeNumber(6, 0),  [BEAN, BEANUSDC]],
+            ["Max: BEAN:USDC -> BEAN",      "getMaxAmountIn", localeNumber(18, 0), [BEANUSDC, BEAN]],
             ["Max: urBEAN -> urBEANwstETH", "getMaxAmountIn", localeNumber(6, 0),  [UNRIPE_BEAN, UNRIPE_LP]],
             ["Max: urBEANwstETH -> urBEAN", "getMaxAmountIn", localeNumber(6, 0),  [UNRIPE_LP, UNRIPE_BEAN]],
           ]}
@@ -106,11 +124,11 @@ const Home: NextPage = () => {
         <CallsModule
           title="Field"
           slots={[
-            ["Pods", "totalPods", localeNumber(6, 0)],
-            ["Soil", "totalSoil", localeNumber(6, 0)],
-            ["Temperature", "yield", percentNumber(2, 0)],
-            ["Harvested Pods", "totalHarvested", localeNumber(6, 0)],
-            ["Harvestable Index", "harvestableIndex", localeNumber(6, 0)]
+            ["Pods", "totalPods", localeNumber(6, 0), [0]],
+            ["Soil", "totalSoil", localeNumber(6, 0), undefined],
+            ["Temperature", "maxTemperature", percentNumber(9, 2), undefined],
+            ["Harvested Pods", "totalHarvested", localeNumber(6, 0), [0]],
+            ["Harvestable Index", "harvestableIndex", localeNumber(6, 0), [0]]
           ]}
           raw={raw}
         />
