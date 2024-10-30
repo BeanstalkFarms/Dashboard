@@ -15,3 +15,7 @@ yarn dev --port 4000  # port is optional; prevents clash with Beanstalk-UI on po
 
 ## Tracking events
 Head to the `/events` page and click "Start listening" in the top right.
+
+## License
+
+[MIT](https://github.com/BeanstalkFarms/Beanstalk/blob/master/LICENSE.txt)
